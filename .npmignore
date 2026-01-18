@@ -1,0 +1,28 @@
+// system file
+*.log
+.DS_Store*
+.idea/
+report.*.json
+
+// specific files
+node_modules/
+test/
+CHANGELOG.md
+src/
+demo/
+test/
+Makefile
+README.md
+jest.config.js
+tsconfig.json
+.github/
+webpack/
+tailwind.config.js
+
+// setting files
+.babelrc
+.travis.yml
+.eslintrc.js
+.eslintignore
+.travis.yml
+.versionrc.json
