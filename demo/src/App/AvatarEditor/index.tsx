@@ -85,63 +85,75 @@ export default class AvatarEditor extends Component {
       <div className="AvatarEditor rounded-full px-3 py-2 flex items-center">
         {/* Face */}
         <SectionWrapper
-          className="w-8 h-8 rounded-full p-2 mx-2"
+          className="p-2.5 mx-2"
           tip="Face"
           switchConfig={this.switchConfig.bind(this, 'faceColor', config.faceColor)}>
           <Face color={config.faceColor} />
         </SectionWrapper>
         {/* Hair style */}
         <SectionWrapper
-          className="w-8 h-8 rounded-full p-2 mx-2"
+          className="p-2.5 mx-2"
           tip="Hair"
           switchConfig={this.switchConfig.bind(this, 'hairStyle', config.hairStyle)}>
           <Hair style={config.hairStyle} color="#fff" colorRandom />
         </SectionWrapper>
         {/* Hat style */}
         <SectionWrapper
-          className="w-8 h-8 rounded-full p-2 mx-2"
+          className="p-2.5 mx-2"
           tip="Hat"
           switchConfig={this.switchConfig.bind(this, 'hatStyle', config.hatStyle)}>
-          <Hat style={config.hatStyle} color="#fff" />
+          {config.hatStyle === "none" ? (
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="empty-state-icon" style={{ color: '#e63946' }}>
+              <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          ) : (
+            <Hat style={config.hatStyle} color="#fff" />
+          )}
         </SectionWrapper>
         {/* Eyes style */}
         <SectionWrapper
-          className="w-8 h-8 rounded-full p-2 mx-2"
+          className="p-2.5 mx-2"
           tip="Eyes"
           switchConfig={this.switchConfig.bind(this, 'eyeStyle', config.eyeStyle)}>
           <Eyes style={config.eyeStyle} color="#fff" />
         </SectionWrapper>
         {/* Glasses style */}
         <SectionWrapper
-          className="w-8 h-8 rounded-full p-2 mx-2"
+          className="p-2.5 mx-2"
           tip="Glasses"
           switchConfig={this.switchConfig.bind(this, 'glassesStyle', config.glassesStyle)}>
-          <Glasses style={config.glassesStyle} color="#fff" />
+          {config.glassesStyle === "none" ? (
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="empty-state-icon" style={{ color: '#e63946' }}>
+              <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          ) : (
+            <Glasses style={config.glassesStyle} color="#fff" />
+          )}
         </SectionWrapper>
         {/* Ear style */}
         <SectionWrapper
-          className="w-8 h-8 rounded-full p-2 mx-2"
+          className="p-2.5 mx-2"
           tip="Ear"
           switchConfig={this.switchConfig.bind(this, 'earSize', config.earSize)}>
           <Ear size={config.earSize} color="#fff" />
         </SectionWrapper>
         {/* Nose style */}
         <SectionWrapper
-          className="w-8 h-8 rounded-full p-2 mx-2"
+          className="p-2.5 mx-2"
           tip="Nose"
           switchConfig={this.switchConfig.bind(this, 'noseStyle', config.noseStyle)}>
           <Nose style={config.noseStyle} color="#fff" />
         </SectionWrapper>
         {/* Mouth style */}
         <SectionWrapper
-          className="w-8 h-8 rounded-full p-2 mx-2"
+          className="p-2.5 mx-2"
           tip="Mouth"
           switchConfig={this.switchConfig.bind(this, 'mouthStyle', config.mouthStyle)}>
           <Mouth style={config.mouthStyle} color="#fff" />
         </SectionWrapper>
         {/* Shirt style */}
         <SectionWrapper
-          className="w-8 h-8 rounded-full p-2 mx-2"
+          className="p-2.5 mx-2"
           tip="Shirt"
           switchConfig={this.switchConfig.bind(this, 'shirtStyle', config.shirtStyle)}>
           <Shirt style={config.shirtStyle} color="#fff" />
@@ -149,11 +161,11 @@ export default class AvatarEditor extends Component {
 
         {/* Shape style */}
         <SectionWrapper
-          className="w-8 h-8 rounded-full p-2 mx-2"
+          className="p-2.5 mx-2"
           tip="Shape"
           switchConfig={this.switchShape.bind(this, shape)}>
           <div
-            className={classnames("w-3 h-3 bg-white", {
+            className={classnames("w-4 h-4 bg-white", {
               "rounded-full": shape === 'circle',
               "rounded": shape === 'rounded'
             })} />
@@ -162,7 +174,7 @@ export default class AvatarEditor extends Component {
         <div className="divider w-0.5 h-5 rounded mx-2" />
         <div className="mx-2 relative flex justify-center">
           <i
-            className={classnames("iconfont icon-code text-xl  cursor-pointer transition duration-300 hover:text-green-100", {
+            className={classnames("iconfont icon-code text-xl cursor-pointer", {
               banTip: isCodeShow
             })}
             data-tip="Config"
@@ -174,9 +186,9 @@ export default class AvatarEditor extends Component {
           </div>
         </div>
 
-        <div className="divider w-0.5 h-5 rounded mx-2" />
+        <div className="divider w-0.5 h-6 rounded mx-2" />
         <i
-          className="iconfont icon-download text-xl mx-2 cursor-pointer transition duration-300 hover:text-green-100"
+          className="iconfont icon-download text-xl mx-2 cursor-pointer"
           data-tip="Download"
           onClick={download} />
       </div>

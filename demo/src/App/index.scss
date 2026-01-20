@@ -1,9 +1,39 @@
 #app {
   min-height: 100vh;
-  background: #000;
-  color: #fff;
+  background: oklch(0.98 0 0);
+  color: oklch(0.145 0 0);
 }
 
 .inputField {
-  background: rgba(255, 255, 255, 0.1);
+  background: oklch(1 0 0);
+  border: 1px solid oklch(0.922 0 0);
+  color: oklch(0.145 0 0);
+  
+  &:focus {
+    outline: 2px solid oklch(0.55 0.24 285);
+    outline-offset: 2px;
+  }
+  
+  &::placeholder {
+    color: oklch(0.556 0 0);
+  }
+  
+  &:disabled {
+    background: oklch(0.97 0 0);
+    color: oklch(0.556 0 0);
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+}
+
+.footer-links {
+  color: oklch(0.556 0 0);
+  
+  a {
+    color: inherit;
+    
+    &:hover {
+      color: oklch(0.55 0.24 285);
+    }
+  }
 }

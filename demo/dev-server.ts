@@ -90,6 +90,28 @@ async function getHTML(): Promise<string> {
   const htmlPath = resolve(DEMO_ROOT, "app.template.html");
   const html = await Bun.file(htmlPath).text();
 
+  // First compile theme-v2.css (which includes Tailwind)
+  const themePath = resolve(DEMO_SRC, "theme-v2.css");
+  let themeCSS = "";
+  if (existsSync(themePath)) {
+    try {
+      console.log("🎨 Compiling theme.css (Tailwind)...");
+      const themeContent = await Bun.file(themePath).text();
+      // Process theme.css with PostCSS (Tailwind processes @tailwind directives)
+      const themeResult = await postcss([
+        tailwindcss(resolve(ROOT, "tailwind.config.js")),
+        autoprefixer,
+      ]).process(themeContent, {
+        from: themePath,
+      });
+      themeCSS = themeResult.css;
+      console.log(`✅ Theme compiled (${themeCSS.length} bytes)`);
+    } catch (error: any) {
+      console.error("❌ Failed to compile theme.css:", error.message);
+      console.error(error.stack);
+    }
+  }
+
   // Compile all SCSS files
   const scssFiles = [
     resolve(DEMO_SRC, "index.scss"),
@@ -118,26 +140,10 @@ async function getHTML(): Promise<string> {
     }
   }
 
-  // Also compile Tailwind
-  const tailwindInput = `@tailwind base; @tailwind components; @tailwind utilities;`;
-  let tailwindCSS = "";
-  try {
-    console.log("🎨 Compiling Tailwind CSS...");
-    const tailwindResult = await postcss([
-      tailwindcss(resolve(ROOT, "tailwind.config.js")),
-      autoprefixer,
-    ]).process(tailwindInput, { from: undefined });
-    tailwindCSS = tailwindResult.css;
-    console.log(`✅ Tailwind compiled (${tailwindCSS.length} bytes)`);
-  } catch (error: any) {
-    console.error("❌ Failed to compile Tailwind:", error.message);
-    console.error(error.stack);
-  }
-
   return html.replace(
     "</head>",
     `
-    <style>${tailwindCSS}</style>
+    <style>${themeCSS}</style>
     <style>${allCSS}</style>
     </head>`
   ).replace(

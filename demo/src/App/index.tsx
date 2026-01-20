@@ -7,7 +7,6 @@ import ReactNiceAvatar, { genConfig } from "react-nice-avatar/index";
 
 import AvatarEditor from './AvatarEditor/index'
 import AvatarList from './AvatarList/index'
-import Footer from './Footer/index'
 
 require('./index.scss')
 
@@ -15,9 +14,7 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      config: genConfig({
-        isGradient: Boolean(Math.round(Math.random()))
-      }),
+      config: genConfig("Aziz"),
       shape: 'circle'
     }
     this.avatarId = 'myAvatar'
@@ -81,16 +78,14 @@ class App extends Component {
             updateShape={this.updateShape.bind(this)}
             download={this.download.bind(this)} />
           <input
-            className="inputField w-64 h-10 p-2 rounded-full mt-10 text-center outline-none"
-            placeholder="input name or email ..."
-            onKeyUp={this.onInputKeyUp.bind(this)} />
+            className="inputField w-64 h-10 p-2 rounded-full mt-10 text-center"
+            value="Aziz"
+            disabled
+            readOnly />
         </main>
 
         {/* Avatar list */}
         <AvatarList selectConfig={this.selectConfig.bind(this)} />
-
-        {/* Footer */}
-        <Footer />
       </div>
     );
   }

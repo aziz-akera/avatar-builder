@@ -23,8 +23,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.14.3",
-    "chroma-js": "^2.1.2",
-    "prop-types": "^15.7.2"
+    "chroma-js": "^2.1.2"
   },
   "devDependencies": {
     "@types/file-saver": "^2.0.3",
