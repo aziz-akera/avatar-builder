@@ -7,6 +7,7 @@ import type { AvatarFullConfig } from "react-nice-avatar/types";
 
 import AvatarEditor from './AvatarEditor/index'
 import AvatarList from './AvatarList/index'
+import { OnboardBackground } from './OnboardBackground/index'
 
 require('./index.scss')
 
@@ -69,33 +70,35 @@ class App extends Component<Record<string, never>, AppState> {
   render() {
     const { config, shape } = this.state
     return (
-      <div className="App flex flex-col min-h-screen">
-        <main className="flex-1 flex flex-col items-center justify-center">
-          <div
-            id={this.avatarId}
-            className="mb-10">
-            <ReactNiceAvatar
-              className="w-64 h-64 highres:w-80 highres:h-80"
-              hairColorRandom
+      <OnboardBackground>
+        <div className="App flex flex-col min-h-screen">
+          <main className="flex-1 flex flex-col items-center justify-center">
+            <div
+              id={this.avatarId}
+              className="mb-10">
+              <ReactNiceAvatar
+                className="w-64 h-64 highres:w-80 highres:h-80"
+                hairColorRandom
+                shape={shape}
+                {...config} />
+            </div>
+            <AvatarEditor
+              config={config}
               shape={shape}
-              {...config} />
-          </div>
-          <AvatarEditor
-            config={config}
-            shape={shape}
-            updateConfig={this.updateConfig.bind(this)}
-            updateShape={this.updateShape.bind(this)}
-            download={this.download.bind(this)} />
-          <input
-            className="inputField w-64 h-10 p-2 rounded-full mt-10 text-center"
-            value="Aziz"
-            disabled
-            readOnly />
-        </main>
+              updateConfig={this.updateConfig.bind(this)}
+              updateShape={this.updateShape.bind(this)}
+              download={this.download.bind(this)} />
+            <input
+              className="inputField w-64 h-10 p-2 rounded-full mt-10 text-center"
+              value="Aziz"
+              disabled
+              readOnly />
+          </main>
 
-        {/* Avatar list */}
-        <AvatarList selectConfig={this.selectConfig.bind(this)} />
-      </div>
+          {/* Avatar list */}
+          <AvatarList selectConfig={this.selectConfig.bind(this)} />
+        </div>
+      </OnboardBackground>
     );
   }
 }

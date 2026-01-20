@@ -416,6 +416,34 @@ serve({
       }
     }
 
+    // Serve ellipses and other root-level assets
+    if (pathname.startsWith("/ellipses/")) {
+      const filePath = resolve(DEMO_ROOT, "public", pathname.substring(1));
+      if (existsSync(filePath)) {
+        return new Response(Bun.file(filePath), {
+          headers: {
+            "Content-Type": pathname.endsWith(".svg") ? "image/svg+xml" : "image/png",
+          },
+        });
+      }
+    }
+
+    // Serve polka background and other root-level images
+    if (pathname === "/polka.png" || pathname === "/polka.webp" || pathname.match(/\.(png|jpg|jpeg|gif|svg|webp)$/)) {
+      const filePath = resolve(DEMO_ROOT, "public", pathname.substring(1));
+      if (existsSync(filePath)) {
+        return new Response(Bun.file(filePath), {
+          headers: {
+            "Content-Type": pathname.endsWith(".svg")
+              ? "image/svg+xml"
+              : pathname.endsWith(".webp")
+              ? "image/webp"
+              : "image/png",
+          },
+        });
+      }
+    }
+
     // Handle TypeScript/TSX source files (for source maps)
     if (pathname.match(/\.(ts|tsx)$/)) {
       let filePath: string;
