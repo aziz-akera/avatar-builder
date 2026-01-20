@@ -11,11 +11,8 @@ import { OnboardBackground } from './OnboardBackground/index'
 
 require('./index.scss')
 
-type Shape = 'circle' | 'rounded' | 'square';
-
 interface AppState {
   config: AvatarFullConfig;
-  shape: Shape;
 }
 
 class App extends Component<Record<string, never>, AppState> {
@@ -24,8 +21,7 @@ class App extends Component<Record<string, never>, AppState> {
   constructor(props) {
     super(props)
     this.state = {
-      config: genConfig("Aziz"),
-      shape: 'circle'
+      config: genConfig("Aziz")
     }
     this.avatarId = 'myAvatar'
   }
@@ -38,10 +34,6 @@ class App extends Component<Record<string, never>, AppState> {
     const { config } = this.state
     config[key] = value
     this.setState({ config })
-  }
-
-  updateShape (shape) {
-    this.setState({ shape })
   }
 
   async download() {
@@ -68,7 +60,7 @@ class App extends Component<Record<string, never>, AppState> {
   }
 
   render() {
-    const { config, shape } = this.state
+    const { config } = this.state
     return (
       <OnboardBackground>
         <div className="App flex flex-col min-h-screen">
@@ -79,14 +71,12 @@ class App extends Component<Record<string, never>, AppState> {
               <ReactNiceAvatar
                 className="w-64 h-64 highres:w-80 highres:h-80"
                 hairColorRandom
-                shape={shape}
+                shape="circle"
                 {...config} />
             </div>
             <AvatarEditor
               config={config}
-              shape={shape}
               updateConfig={this.updateConfig.bind(this)}
-              updateShape={this.updateShape.bind(this)}
               download={this.download.bind(this)} />
             <input
               className="inputField w-64 h-10 p-2 rounded-full mt-10 text-center"

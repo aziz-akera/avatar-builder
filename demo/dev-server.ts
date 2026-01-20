@@ -84,8 +84,8 @@ async function compileSCSS(filePath: string): Promise<string> {
 
     // Process with PostCSS (Tailwind + Autoprefixer)
     const postcssResult = await postcss([
-      tailwindcss(resolve(ROOT, "tailwind.config.js")),
-      autoprefixer,
+      tailwindcss(resolve(ROOT, "tailwind.config.js")) as any,
+      autoprefixer as any,
     ]).process(css, {
       from: filePath,
     });
@@ -111,8 +111,8 @@ async function getHTML(): Promise<string> {
       const themeContent = await Bun.file(themePath).text();
       // Process theme.css with PostCSS (Tailwind processes @tailwind directives)
       const themeResult = await postcss([
-        tailwindcss(resolve(ROOT, "tailwind.config.js")),
-        autoprefixer,
+        tailwindcss(resolve(ROOT, "tailwind.config.js")) as any,
+        autoprefixer as any,
       ]).process(themeContent, {
         from: themePath,
       });

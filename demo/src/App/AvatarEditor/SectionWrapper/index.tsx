@@ -2,13 +2,19 @@ import React from 'react'
 
 import './index.scss'
 
-export default function sectionWrapper(props: {
-  className?: string,
-  children: JSX.Element,
-  switchConfig: () => void,
-  tip: string
-}): HTMLElement {
-  const { className = "", children, switchConfig, tip } = props
+type SectionWrapperProps = {
+  className?: string;
+  children: React.ReactNode;
+  switchConfig: () => void;
+  tip: string;
+};
+
+export default function SectionWrapper({
+  className = "",
+  children,
+  switchConfig,
+  tip,
+}: SectionWrapperProps): JSX.Element {
   return (
     <div
       className={"SectionWrapper " + className}
