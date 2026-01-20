@@ -1,0 +1,7 @@
+[install]
+# Auto-install peer dependencies
+auto = true
+
+[preload]
+# Preload scripts if needed
+
