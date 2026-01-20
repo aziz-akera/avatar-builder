@@ -1,16 +1,28 @@
-import { serve, build, file } from "bun";
-import { existsSync } from "fs";
-import { resolve, dirname, extname } from "path";
+// @ts-expect-error Bun provides this module at runtime
+import { serve, build } from "bun";
+import { existsSync, watch } from "fs";
+import { resolve, extname } from "path";
 import sass from "sass";
 import postcss from "postcss";
 import tailwindcss from "tailwindcss";
 import autoprefixer from "autoprefixer";
 
+// Minimal Bun type shim for linting
+declare const Bun: any;
+
 const PORT = parseInt(process.env.PORT || "8080");
-const ROOT = resolve(import.meta.dir, "..");
-const DEMO_ROOT = resolve(import.meta.dir);
+const ROOT = resolve(new URL("..", import.meta.url).pathname);
+const DEMO_ROOT = resolve(new URL(".", import.meta.url).pathname);
 const SRC_ROOT = resolve(ROOT, "src");
 const DEMO_SRC = resolve(DEMO_ROOT, "src");
+
+// Track files that should trigger a rebuild
+const watchedExtensions = [".ts", ".tsx", ".js", ".jsx", ".css", ".scss"];
+
+function shouldInvalidate(pathname: string): boolean {
+  const ext = extname(pathname);
+  return watchedExtensions.includes(ext);
+}
 
 // Path alias mapping
 function resolveAlias(importPath: string): string | null {
@@ -173,6 +185,36 @@ async function getHTML(): Promise<string> {
 // Build the app bundle
 let appBundleCache: string | null = null;
 let appBundleTime = 0;
+
+// Invalidate caches when source files change
+function invalidateBundles(changedPath: string) {
+  if (shouldInvalidate(changedPath)) {
+    appBundleCache = null;
+    appBundleTime = 0;
+    console.log(`♻️  Change detected (${changedPath}), cache cleared`);
+  }
+}
+
+// Watch demo and library sources for changes to trigger rebuilds
+function watchDir(dir: string) {
+  try {
+    return watch(
+      dir,
+      { recursive: true },
+      (_eventType, filename) => {
+        if (filename) {
+          invalidateBundles(resolve(dir, filename.toString()));
+        }
+      }
+    );
+  } catch (err) {
+    console.error(`Failed to watch ${dir}:`, err);
+    return null;
+  }
+}
+
+const watchers = [watchDir(DEMO_SRC), watchDir(SRC_ROOT)].filter(Boolean);
+void watchers;
 
 async function buildAppBundle(): Promise<string> {
   const entryPath = resolve(DEMO_SRC, "index.tsx");

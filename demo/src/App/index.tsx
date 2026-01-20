@@ -1,16 +1,25 @@
 import React, { Component } from "react";
-import { hot } from "react-hot-loader";
 import domtoimage from "dom-to-image";
 import { saveAs } from "file-saver";
 
 import ReactNiceAvatar, { genConfig } from "react-nice-avatar/index";
+import type { AvatarFullConfig } from "react-nice-avatar/types";
 
 import AvatarEditor from './AvatarEditor/index'
 import AvatarList from './AvatarList/index'
 
 require('./index.scss')
 
-class App extends Component {
+type Shape = 'circle' | 'rounded' | 'square';
+
+interface AppState {
+  config: AvatarFullConfig;
+  shape: Shape;
+}
+
+class App extends Component<Record<string, never>, AppState> {
+  avatarId: string;
+
   constructor(props) {
     super(props)
     this.state = {
@@ -91,4 +100,4 @@ class App extends Component {
   }
 }
 
-export default hot(module)(App);
+export default App;

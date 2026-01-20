@@ -6,9 +6,15 @@
     "module": "es6",            // specify module code generation
     "jsx": "react",             // use typescript to transpile jsx to js
     "target": "es5",            // specify ECMAScript target version
+    "moduleResolution": "node",
     "allowJs": true,            // allow a partial TypeScript and JavaScript codebase
     "allowSyntheticDefaultImports": true, // import default
     "baseUrl": ".",
+    "skipLibCheck": true,
+    "typeRoots": [
+      "./types",
+      "../node_modules/@types"
+    ],
     "paths": {
       "react-nice-avatar": ["../src/index.tsx"],
       "react-nice-avatar/*": ["../src/*"]
@@ -16,6 +22,7 @@
   },
   "include": [
     "./src",
-    "../src"
+    "../src",
+    "./types/**/*.d.ts"
   ]
 }
