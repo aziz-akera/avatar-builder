@@ -16,3 +16,4 @@ dist/
 demo/dist/
 
 report.*.json
+config.bat
