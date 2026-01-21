@@ -22,7 +22,7 @@ class App extends Component<Record<string, never>, AppState> {
     super(props)
     this.state = {
       config: {
-        ...genConfig("Aziz"),
+        ...genConfig(),
         bgColor: '#5A3CF1'
       }
     }
@@ -37,6 +37,13 @@ class App extends Component<Record<string, never>, AppState> {
     const { config } = this.state
     config[key] = value
     this.setState({ config })
+  }
+
+  randomizeConfig () {
+    const { config } = this.state
+    const next = genConfig()
+    // Preserve current background selection while randomizing traits
+    this.setState({ config: { ...next, bgColor: config.bgColor } })
   }
 
   async download() {
@@ -54,12 +61,6 @@ class App extends Component<Record<string, never>, AppState> {
 
       saveAs(blob, "avatar.png");
     }
-  }
-
-  onInputKeyUp (e) {
-    this.setState({
-      config: genConfig(e.target.value)
-    })
   }
 
   render() {
@@ -80,13 +81,18 @@ class App extends Component<Record<string, never>, AppState> {
             <AvatarEditor
               config={config}
               updateConfig={this.updateConfig.bind(this)}
+            randomize={this.randomizeConfig.bind(this)}
               download={this.download.bind(this)} />
-            <input
-              className="inputField w-64 h-10 p-2 rounded-full mt-10 text-center"
-              value="Aziz"
-              disabled
-              readOnly />
           </main>
+
+          {/* Continue button */}
+          <div className="w-full flex justify-center my-6">
+            <button
+              type="button"
+              className="continue-btn">
+              Continue
+            </button>
+          </div>
 
           {/* Avatar list */}
           <AvatarList selectConfig={this.selectConfig.bind(this)} />
