@@ -52,6 +52,8 @@ export default class AvatarEditor extends Component<AvatarEditorProps, AvatarEdi
     return {
       ...opts,
       hairStyle: Array.from(hairSet),
+      hairColor: opts.hairColor,
+      hatColor: opts.hatColor,
       bgColor: [
         // Solid colors
         '#5A3CF1',
@@ -124,6 +126,20 @@ export default class AvatarEditor extends Component<AvatarEditorProps, AvatarEdi
       )
     }
 
+    if (type === 'hairColor' || type === 'hatColor') {
+      return (
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            background: option,
+            borderRadius: '50%',
+            border: '2px solid rgba(0, 0, 0, 0.1)',
+          }}
+        />
+      )
+    }
+
     switch (type) {
       case 'faceColor':
         // @ts-expect-error - Face component returns SVGElement but works as JSX
@@ -132,7 +148,6 @@ export default class AvatarEditor extends Component<AvatarEditorProps, AvatarEdi
         // @ts-expect-error - Hair component returns SVGElement but works as JSX
         return <Hair style={option} color="#fff" colorRandom />
       case 'hatStyle':
-        // @ts-expect-error - Hat component returns SVGElement but works as JSX
         return <Hat style={option} color="#fff" />
       case 'eyeStyle':
         // @ts-expect-error - Eyes component returns SVGElement but works as JSX
@@ -299,21 +314,93 @@ export default class AvatarEditor extends Component<AvatarEditorProps, AvatarEdi
                 ✕
               </button>
             </div>
-            <div className="AvatarEditor-popover-grid">
-              {this.myDefaultOptions[openPopover]?.map((option: any, index: number) => (
-                <button
-                  key={index}
-                  type="button"
-                  className="AvatarEditor-popover-item"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    this.selectOption(openPopover, option);
-                  }}
-                  onMouseDown={(e) => e.preventDefault()}>
-                  {this.renderOption(openPopover, option)}
-                </button>
-              ))}
-            </div>
+
+            {/* Combined popovers for style + color */}
+            {openPopover === 'hairStyle' ? (
+              <>
+                <div className="AvatarEditor-popover-grid">
+                  {this.myDefaultOptions.hairStyle?.map((option: any, index: number) => (
+                    <button
+                      key={`hair-style-${index}`}
+                      type="button"
+                      className="AvatarEditor-popover-item"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        this.selectOption('hairStyle', option);
+                      }}
+                      onMouseDown={(e) => e.preventDefault()}>
+                      {this.renderOption('hairStyle', option)}
+                    </button>
+                  ))}
+                </div>
+                <div className="divider w-full h-px my-3" />
+                <div className="AvatarEditor-popover-grid">
+                  {this.myDefaultOptions.hairColor?.map((option: any, index: number) => (
+                    <button
+                      key={`hair-color-${index}`}
+                      type="button"
+                      className="AvatarEditor-popover-item"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        this.selectOption('hairColor', option);
+                      }}
+                      onMouseDown={(e) => e.preventDefault()}>
+                      {this.renderOption('hairColor', option)}
+                    </button>
+                  ))}
+                </div>
+              </>
+            ) : openPopover === 'hatStyle' ? (
+              <>
+                <div className="AvatarEditor-popover-grid">
+                  {this.myDefaultOptions.hatStyle?.map((option: any, index: number) => (
+                    <button
+                      key={`hat-style-${index}`}
+                      type="button"
+                      className="AvatarEditor-popover-item"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        this.selectOption('hatStyle', option);
+                      }}
+                      onMouseDown={(e) => e.preventDefault()}>
+                      {this.renderOption('hatStyle', option)}
+                    </button>
+                  ))}
+                </div>
+                <div className="divider w-full h-px my-3" />
+                <div className="AvatarEditor-popover-grid">
+                  {this.myDefaultOptions.hatColor?.map((option: any, index: number) => (
+                    <button
+                      key={`hat-color-${index}`}
+                      type="button"
+                      className="AvatarEditor-popover-item"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        this.selectOption('hatColor', option);
+                      }}
+                      onMouseDown={(e) => e.preventDefault()}>
+                      {this.renderOption('hatColor', option)}
+                    </button>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <div className="AvatarEditor-popover-grid">
+                {this.myDefaultOptions[openPopover]?.map((option: any, index: number) => (
+                  <button
+                    key={index}
+                    type="button"
+                    className="AvatarEditor-popover-item"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      this.selectOption(openPopover, option);
+                    }}
+                    onMouseDown={(e) => e.preventDefault()}>
+                    {this.renderOption(openPopover, option)}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>

@@ -89,17 +89,17 @@ export default class ReactNiceAvatar extends Component<NiceAvatarProps> {
               height: "90%"
             }}>
             <Face color={config.faceColor} />
-            <Hat
-              color={config.hatColor}
-              style={config.hatStyle} />
-            {config.hatStyle === "none" &&
+
+            {/* Hair under face details and hat */}
+            {config.hatStyle === "none" && (
               <Hair
                 color={config.hairColor}
                 style={config.hairStyle}
-                colorRandom={hairColorRandom} />
-            }
+                colorRandom={hairColorRandom}
+              />
+            )}
 
-            {/* Face detail */}
+            {/* Face detail sits above hair */}
             <div
               style={{
                 position: "absolute",
@@ -121,6 +121,11 @@ export default class ReactNiceAvatar extends Component<NiceAvatarProps> {
             </div>
 
             <Shirt color={config.shirtColor} style={config.shirtStyle} />
+
+            {/* Hat renders last to sit above shirt and hair */}
+            <Hat
+              color={config.hatColor}
+              style={config.hatStyle} />
           </div>
         </div>
       </div>

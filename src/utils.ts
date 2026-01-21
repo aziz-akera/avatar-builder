@@ -79,7 +79,7 @@ export const defaultOptions: DefaultOptions = {
   hairStyleMan: ["normal", "thick", "mohawk"],
   hairStyleWoman: ["normal", "womanLong", "womanShort"],
   hatColor: ["#000", "#fff", "#77311D", "#FC909F", "#D2EFF3", "#506AF4", "#F48150"],
-  hatStyle: ["beanie", "turban", "none"],
+  hatStyle: ["beanie", "turban", "hijab", "none"],
   eyeBrowWoman: ["up", "upWoman"],
   eyeStyle: ["circle", "oval", "smile"],
   glassesStyle: ["round", "square", "none"],
