@@ -7,9 +7,9 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "clean": "rm -rf node_modules",
-    "dev": "cd demo && bun run dev-server.ts",
-    "build": "bun run scripts/build.ts",
-    "build:demo": "bun run scripts/build-demo.ts"
+    "dev": "node init && cd demo && bun run dev-server.ts",
+    "build": "node init && bun run scripts/build.ts",
+    "build:demo": "node init && bun run scripts/build-demo.ts"
   },
   "keywords": [
     "react",
