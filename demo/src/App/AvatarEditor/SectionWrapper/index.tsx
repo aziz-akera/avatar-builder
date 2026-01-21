@@ -5,7 +5,7 @@ import './index.scss'
 type SectionWrapperProps = {
   className?: string;
   children: React.ReactNode;
-  switchConfig: () => void;
+  switchConfig: (e?: React.MouseEvent) => void;
   tip: string;
 };
 

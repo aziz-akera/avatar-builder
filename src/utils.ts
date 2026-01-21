@@ -12,6 +12,7 @@ import {
   MouthStyle,
   ShirtStyle,
   EyeBrowStyle,
+  BeardStyle,
 } from "./types"
 
 /**
@@ -66,7 +67,8 @@ interface DefaultOptions {
   shirtStyle: ShirtStyle[],
   shirtColor: string[],
   bgColor: string[],
-  gradientBgColor: string[]
+  gradientBgColor: string[],
+  beardStyle: BeardStyle[]
 }
 
 export const defaultOptions: DefaultOptions = {
@@ -94,7 +96,8 @@ export const defaultOptions: DefaultOptions = {
     "linear-gradient(45deg, #3e1ccd 0%, #ff6871 100%)",
     "linear-gradient(45deg, #1729ff 0%, #ff56f7 100%)",
     "linear-gradient(45deg, #56b5f0 0%, #45ccb5 100%)"
-  ]
+  ],
+  beardStyle: ["none", "full", "scruff"]
 };
 
 const stringToHashCode = (str: string) : number => {
@@ -221,6 +224,12 @@ export const genConfig: GenConfigFunc = (userConfig = {}) => {
       ? pickByHashCode(hashCode, 'bgColor', { avoidList: [_hairOrHatColor, response.shirtColor] })
       : userConfig.bgColor || pickRandomFromList(defaultOptions.bgColor, { avoidList: [_hairOrHatColor, response.shirtColor] });
   }
+
+  // Beard
+  response.beardStyle = isSeedConfig
+    ? pickByHashCode(hashCode, 'beardStyle', { usually: ["none"] }) as BeardStyle
+    : (userConfig.beardStyle || pickRandomFromList(defaultOptions.beardStyle, { usually: ["none"] }));
+  response.beardColor = userConfig.beardColor || response.hairColor;
 
   return response;
 };

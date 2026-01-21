@@ -23,7 +23,12 @@ interface AvatarEditorProps {
   download: () => void;
 }
 
-export default class AvatarEditor extends Component<AvatarEditorProps> {
+interface AvatarEditorState {
+  openPopover: string | null;
+  popoverPosition: { left: number; top: number } | null;
+}
+
+export default class AvatarEditor extends Component<AvatarEditorProps, AvatarEditorState> {
   static propTypes = {
     config: PropTypes.object.isRequired,
     updateConfig: PropTypes.func.isRequired,
@@ -35,6 +40,10 @@ export default class AvatarEditor extends Component<AvatarEditorProps> {
   constructor (props: AvatarEditorProps) {
     super(props)
     this.myDefaultOptions = this.genDefaultOptions(defaultOptions)
+    this.state = {
+      openPopover: null,
+      popoverPosition: null,
+    }
   }
 
   // Modification on defaultOptions for convenient
@@ -42,27 +51,124 @@ export default class AvatarEditor extends Component<AvatarEditorProps> {
     const hairSet = new Set(opts.hairStyleMan.concat(opts.hairStyleWoman))
     return {
       ...opts,
-      hairStyle: Array.from(hairSet)
+      hairStyle: Array.from(hairSet),
+      bgColor: [
+        // Solid colors
+        '#5A3CF1',
+        '#E38DD3',
+        '#57C7FA',
+        '#8B75FF',
+        '#BCAFFF',
+        // Gradients
+        'linear-gradient(135deg, #5A3CF1 0%, #E38DD3 100%)',
+        'linear-gradient(135deg, #2D4CF9 0%, #57C7FA 100%)',
+        'linear-gradient(135deg, #8B75FF 0%, #BCAFFF 100%)',
+        'linear-gradient(135deg, #5A3CF1 0%, #8B75FF 100%)',
+        'linear-gradient(135deg, #E38DD3 0%, #BCAFFF 100%)',
+        'linear-gradient(135deg, #57C7FA 0%, #E38DD3 100%)',
+        'linear-gradient(135deg, #8B75FF 0%, #E38DD3 100%)'
+      ]
     }
   }
 
-  switchConfig (type: string, currentOpt: any): void {
+  openPopover (type: string, event?: React.MouseEvent): void {
+    if (event) {
+      const buttonElement = event.currentTarget as HTMLElement;
+      const rect = buttonElement.getBoundingClientRect();
+      const wrapperElement = buttonElement.closest('.AvatarEditor-wrapper') as HTMLElement;
+      
+      if (wrapperElement) {
+        const wrapperRect = wrapperElement.getBoundingClientRect();
+        const left = rect.left - wrapperRect.left + rect.width / 2;
+        const top = rect.bottom - wrapperRect.top + 12; // 0.75rem = 12px
+        
+        this.setState((prev) => ({
+          openPopover: prev.openPopover === type ? null : type,
+          popoverPosition: prev.openPopover === type ? null : { left, top },
+        }));
+      }
+    } else {
+      this.setState((prev) => ({
+        openPopover: prev.openPopover === type ? null : type,
+        popoverPosition: null,
+      }));
+    }
+  }
+
+  selectOption (type: string, value: any): void {
     const { updateConfig } = this.props
-    const opts = this.myDefaultOptions[type]
-    const currentIdx = opts.findIndex((item: any) => item === currentOpt)
-    const newIdx = (currentIdx + 1) % opts.length
-    updateConfig(type, opts[newIdx])
+    updateConfig(type, value)
+    // Keep popover open to allow previewing multiple options
+  }
+
+  renderOption (type: string, option: any): React.ReactNode {
+    if (option === 'none') {
+      return (
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ color: '#e63946' }}>
+          <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      )
+    }
+
+    if (type === 'bgColor') {
+      return (
+        <div 
+          style={{ 
+            width: '100%', 
+            height: '100%', 
+            background: option, 
+            borderRadius: '50%',
+            border: '2px solid rgba(0, 0, 0, 0.1)'
+          }} 
+        />
+      )
+    }
+
+    switch (type) {
+      case 'faceColor':
+        // @ts-expect-error - Face component returns SVGElement but works as JSX
+        return <Face color={option} />
+      case 'hairStyle':
+        // @ts-expect-error - Hair component returns SVGElement but works as JSX
+        return <Hair style={option} color="#fff" colorRandom />
+      case 'hatStyle':
+        // @ts-expect-error - Hat component returns SVGElement but works as JSX
+        return <Hat style={option} color="#fff" />
+      case 'eyeStyle':
+        // @ts-expect-error - Eyes component returns SVGElement but works as JSX
+        return <Eyes style={option} color="#fff" />
+      case 'glassesStyle':
+        // @ts-expect-error - Glasses component returns SVGElement but works as JSX
+        return <Glasses style={option} color="#fff" />
+      case 'earSize':
+        // @ts-expect-error - Ear component returns SVGElement but works as JSX
+        return <Ear size={option} color="#fff" />
+      case 'noseStyle':
+        // @ts-expect-error - Nose component returns SVGElement but works as JSX
+        return <Nose style={option} color="#fff" />
+      case 'mouthStyle':
+        // @ts-expect-error - Mouth component returns SVGElement but works as JSX
+        return <Mouth style={option} color="#fff" />
+      case 'shirtStyle':
+        // @ts-expect-error - Shirt component returns SVGElement but works as JSX
+        return <Shirt style={option} color="#fff" />
+      default:
+        return null
+    }
   }
 
   render () {
     const { config, download } = this.props
+    const { openPopover, popoverPosition } = this.state
+    
     return (
+      <div className="AvatarEditor-wrapper">
       <div className="AvatarEditor rounded-full px-3 py-2 flex items-center">
         {/* Face */}
         <SectionWrapper
           className="p-2.5 mx-2"
           tip="Face"
-          switchConfig={this.switchConfig.bind(this, 'faceColor', config.faceColor)}>
+          switchConfig={(e) => this.openPopover('faceColor', e)}>
           {/* @ts-expect-error - Face component returns SVGElement but works as JSX */}
           <Face color={config.faceColor} />
         </SectionWrapper>
@@ -70,7 +176,7 @@ export default class AvatarEditor extends Component<AvatarEditorProps> {
         <SectionWrapper
           className="p-2.5 mx-2"
           tip="Hair"
-          switchConfig={this.switchConfig.bind(this, 'hairStyle', config.hairStyle)}>
+          switchConfig={(e) => this.openPopover('hairStyle', e)}>
           {/* @ts-expect-error - Hair component returns SVGElement but works as JSX */}
           <Hair style={config.hairStyle} color="#fff" colorRandom />
         </SectionWrapper>
@@ -78,21 +184,21 @@ export default class AvatarEditor extends Component<AvatarEditorProps> {
         <SectionWrapper
           className="p-2.5 mx-2"
           tip="Hat"
-          switchConfig={this.switchConfig.bind(this, 'hatStyle', config.hatStyle)}>
+          switchConfig={(e) => this.openPopover('hatStyle', e)}>
           {config.hatStyle === "none" ? (
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="empty-state-icon" style={{ color: '#e63946' }}>
               <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           ) : (
             // @ts-expect-error - Hat component returns SVGElement but works as JSX
-            <Hat style={config.hatStyle} color="#fff" />
+          <Hat style={config.hatStyle} color="#fff" />
           )}
         </SectionWrapper>
         {/* Eyes style */}
         <SectionWrapper
           className="p-2.5 mx-2"
           tip="Eyes"
-          switchConfig={this.switchConfig.bind(this, 'eyeStyle', config.eyeStyle)}>
+          switchConfig={(e) => this.openPopover('eyeStyle', e)}>
           {/* @ts-expect-error - Eyes component returns SVGElement but works as JSX */}
           <Eyes style={config.eyeStyle} color="#fff" />
         </SectionWrapper>
@@ -100,21 +206,21 @@ export default class AvatarEditor extends Component<AvatarEditorProps> {
         <SectionWrapper
           className="p-2.5 mx-2"
           tip="Glasses"
-          switchConfig={this.switchConfig.bind(this, 'glassesStyle', config.glassesStyle)}>
+          switchConfig={(e) => this.openPopover('glassesStyle', e)}>
           {config.glassesStyle === "none" ? (
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="empty-state-icon" style={{ color: '#e63946' }}>
               <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           ) : (
             // @ts-expect-error - Glasses component returns SVGElement but works as JSX
-            <Glasses style={config.glassesStyle} color="#fff" />
+          <Glasses style={config.glassesStyle} color="#fff" />
           )}
         </SectionWrapper>
         {/* Ear style */}
         <SectionWrapper
           className="p-2.5 mx-2"
           tip="Ear"
-          switchConfig={this.switchConfig.bind(this, 'earSize', config.earSize)}>
+          switchConfig={(e) => this.openPopover('earSize', e)}>
           {/* @ts-expect-error - Ear component returns SVGElement but works as JSX */}
           <Ear size={config.earSize} color="#fff" />
         </SectionWrapper>
@@ -122,7 +228,7 @@ export default class AvatarEditor extends Component<AvatarEditorProps> {
         <SectionWrapper
           className="p-2.5 mx-2"
           tip="Nose"
-          switchConfig={this.switchConfig.bind(this, 'noseStyle', config.noseStyle)}>
+          switchConfig={(e) => this.openPopover('noseStyle', e)}>
           {/* @ts-expect-error - Nose component returns SVGElement but works as JSX */}
           <Nose style={config.noseStyle} color="#fff" />
         </SectionWrapper>
@@ -130,7 +236,7 @@ export default class AvatarEditor extends Component<AvatarEditorProps> {
         <SectionWrapper
           className="p-2.5 mx-2"
           tip="Mouth"
-          switchConfig={this.switchConfig.bind(this, 'mouthStyle', config.mouthStyle)}>
+          switchConfig={(e) => this.openPopover('mouthStyle', e)}>
           {/* @ts-expect-error - Mouth component returns SVGElement but works as JSX */}
           <Mouth style={config.mouthStyle} color="#fff" />
         </SectionWrapper>
@@ -138,9 +244,28 @@ export default class AvatarEditor extends Component<AvatarEditorProps> {
         <SectionWrapper
           className="p-2.5 mx-2"
           tip="Shirt"
-          switchConfig={this.switchConfig.bind(this, 'shirtStyle', config.shirtStyle)}>
+          switchConfig={(e) => this.openPopover('shirtStyle', e)}>
           {/* @ts-expect-error - Shirt component returns SVGElement but works as JSX */}
           <Shirt style={config.shirtStyle} color="#fff" />
+        </SectionWrapper>
+
+        <div className="divider w-0.5 h-6 rounded mx-2" />
+
+        {/* Background color */}
+        <SectionWrapper
+          className="p-2.5 mx-2"
+          tip="Background"
+          switchConfig={(e) => this.openPopover('bgColor', e)}>
+          <div 
+            style={{ 
+              width: '100%', 
+              height: '100%', 
+              background: config.bgColor || '#5A3CF1', 
+              borderRadius: '50%',
+              border: '2px solid rgba(0, 0, 0, 0.1)',
+              overflow: 'hidden'
+            }} 
+          />
         </SectionWrapper>
 
         <div className="divider w-0.5 h-6 rounded mx-2" />
@@ -148,6 +273,49 @@ export default class AvatarEditor extends Component<AvatarEditorProps> {
           className="iconfont icon-download text-xl mx-2 cursor-pointer"
           data-tip="Download"
           onClick={download} />
+        </div>
+
+        {openPopover && popoverPosition && (
+          <div 
+            className="AvatarEditor-popover"
+            style={{
+              left: `${popoverPosition.left}px`,
+              top: `${popoverPosition.top}px`,
+              transform: 'translateX(-50%)',
+            }}
+            onMouseDown={(e) => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}>
+            <div className="AvatarEditor-popover-header">
+              <span className="AvatarEditor-popover-title">
+                {openPopover === 'bgColor' ? 'Background Color' : openPopover.replace(/([A-Z])/g, ' $1')}
+              </span>
+              <button
+                type="button"
+                className="AvatarEditor-popover-close"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  this.setState({ openPopover: null, popoverPosition: null });
+                }}>
+                ✕
+              </button>
+            </div>
+            <div className="AvatarEditor-popover-grid">
+              {this.myDefaultOptions[openPopover]?.map((option: any, index: number) => (
+                <button
+                  key={index}
+                  type="button"
+                  className="AvatarEditor-popover-item"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    this.selectOption(openPopover, option);
+                  }}
+                  onMouseDown={(e) => e.preventDefault()}>
+                  {this.renderOption(openPopover, option)}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     )
   }

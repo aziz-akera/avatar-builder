@@ -15,6 +15,7 @@ import Glasses from "./glasses";
 import Nose from "./nose";
 import Mouth from "./mouth";
 import Shirt from "./shirt";
+import Beard from "./beard";
 
 export default class ReactNiceAvatar extends Component<NiceAvatarProps> {
   static propTypes = {
@@ -39,7 +40,9 @@ export default class ReactNiceAvatar extends Component<NiceAvatarProps> {
     shirtStyle: PropTypes.oneOf(defaultOptions.shirtStyle),
     shirtColor: PropTypes.string,
     bgColor: PropTypes.string,
-    isGradient: PropTypes.bool
+    isGradient: PropTypes.bool,
+    beardStyle: PropTypes.oneOf(defaultOptions.beardStyle),
+    beardColor: PropTypes.string
   }
 
   render() {
@@ -118,6 +121,7 @@ export default class ReactNiceAvatar extends Component<NiceAvatarProps> {
               <Mouth style={config.mouthStyle} />
             </div>
 
+            <Beard style={config.beardStyle} color={config.beardColor} />
             <Shirt color={config.shirtColor} style={config.shirtStyle} />
           </div>
         </div>

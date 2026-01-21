@@ -10,6 +10,7 @@ export type HairStyle = 'normal' | 'thick' | 'mohawk' | 'womanLong' | 'womanShor
 export type HairStyleMan = 'normal' | 'thick' | 'mohawk'
 export type HairStyleWoman = 'normal' | 'womanLong' | 'womanShort'
 export type HatStyle = 'beanie' |'turban' | 'none'
+export type BeardStyle = 'none' | 'full' | 'scruff'
 export type EyeStyle = 'circle' | 'oval' | 'smile'
 export type GlassesStyle = 'round' | 'square' | 'none'
 export type NoseStyle = 'short' | 'long' | 'round'
@@ -33,7 +34,9 @@ export interface AvatarConfig {
   shirtStyle?: ShirtStyle,
   shirtColor?: string,
   bgColor?: string,
-  isGradient?: boolean
+  isGradient?: boolean,
+  beardStyle?: BeardStyle,
+  beardColor?: string
 }
 
 export interface AvatarFullConfig extends AvatarConfig {

@@ -21,7 +21,10 @@ class App extends Component<Record<string, never>, AppState> {
   constructor(props) {
     super(props)
     this.state = {
-      config: genConfig("Aziz")
+      config: {
+        ...genConfig("Aziz"),
+        bgColor: '#5A3CF1'
+      }
     }
     this.avatarId = 'myAvatar'
   }

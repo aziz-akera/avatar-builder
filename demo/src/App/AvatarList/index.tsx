@@ -9,6 +9,29 @@ import ReactNiceAvatar, { genConfig } from 'react-nice-avatar/index'
 
 import "./index.scss"
 
+// Approved background colors - must match exactly with AvatarEditor approved colors
+const APPROVED_BG_COLORS = [
+  // Solid colors
+  '#5A3CF1',
+  '#E38DD3',
+  '#57C7FA',
+  '#8B75FF',
+  '#BCAFFF',
+  // Gradients
+  'linear-gradient(135deg, #5A3CF1 0%, #E38DD3 100%)',
+  'linear-gradient(135deg, #2D4CF9 0%, #57C7FA 100%)',
+  'linear-gradient(135deg, #8B75FF 0%, #BCAFFF 100%)',
+  'linear-gradient(135deg, #5A3CF1 0%, #8B75FF 100%)',
+  'linear-gradient(135deg, #E38DD3 0%, #BCAFFF 100%)',
+  'linear-gradient(135deg, #57C7FA 0%, #E38DD3 100%)',
+  'linear-gradient(135deg, #8B75FF 0%, #E38DD3 100%)'
+];
+
+const pickRandomBgColor = (): string => {
+  const randomIndex = Math.floor(Math.random() * APPROVED_BG_COLORS.length);
+  return APPROVED_BG_COLORS[randomIndex];
+};
+
 export default class AvatarList extends Component {
   static propTypes = {
     selectConfig: PropTypes.func.isRequired
@@ -32,10 +55,15 @@ export default class AvatarList extends Component {
   genConfigList (count: number): AvatarListItem {
     return new Array(count)
       .fill(null)
-      .map(() => ({
-        ...genConfig({ isGradient: Boolean(Math.round(Math.random())) }),
-        id: 'n_' + nanoid()
-      }))
+      .map(() => {
+        const config = genConfig();
+        // Override bgColor to only use approved colors
+        return {
+          ...config,
+          bgColor: pickRandomBgColor(),
+          id: 'n_' + nanoid()
+        };
+      })
   }
 
   fetchListWidth (count = 0) {
