@@ -90,9 +90,8 @@ class App extends Component<Record<string, never>, AppState> {
 
   renderPremadeAvatars() {
     const { premadeAvatars } = this.state
-    const bgColors = this.getApprovedBgColors()
     
-    return premadeAvatars.map((avatarConfig, index) => (
+    const renderAvatar = (avatarConfig, index) => (
       <div
         key={index}
         className="premade-avatar-item"
@@ -107,7 +106,21 @@ class App extends Component<Record<string, never>, AppState> {
           }}
           {...avatarConfig} />
       </div>
-    ))
+    )
+    
+    const firstRow = premadeAvatars.slice(0, 4).map((config, index) => renderAvatar(config, index))
+    const secondRow = premadeAvatars.slice(4, 8).map((config, index) => renderAvatar(config, index + 4))
+    
+    return (
+      <>
+        <div className="premade-avatars-row">
+          {firstRow}
+        </div>
+        <div className="premade-avatars-row">
+          {secondRow}
+        </div>
+      </>
+    )
   }
 
   async download() {
@@ -153,7 +166,7 @@ class App extends Component<Record<string, never>, AppState> {
               
               {/* Premade avatars */}
               <p className="premade-avatars-label mt-6 mb-2">Or choose from these...</p>
-              <div className="premade-avatars-grid mb-2">
+              <div className="premade-avatars-container mb-2">
                 {this.renderPremadeAvatars()}
               </div>
 
